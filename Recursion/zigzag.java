@@ -1,9 +1,9 @@
-import java.util.*;
+import java.io.*;
 
-public class zigzag {
+public class ZigZag {
     public static void main(String[] args) throws Exception {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
         pzz(n);
     }
 
