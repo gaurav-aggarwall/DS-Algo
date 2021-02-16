@@ -1,5 +1,3 @@
-// Print all indices of a number in an array
-
 import java.io.*;
 
 public class AllIndices {
