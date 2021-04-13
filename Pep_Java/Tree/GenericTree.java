@@ -54,6 +54,26 @@ public class GenericTree {
     return s;
   }
 
+  // Max Of tree
+  public static int max(Node node) {
+    int m = Integer.MIN_VALUE;
+    for (Node child : node.children) {
+      m = Math.max(max(child), m);
+    }
+    m = Math.max(m, node.data);
+    return m;
+  }
+
+  // Height of tree
+  public static int height(Node node) {
+    int h = -1;
+    for(Node child : node.children) {
+      h = Math.max(height(child), h);
+    } 
+    h += 1;
+    return h;
+  }
+
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
