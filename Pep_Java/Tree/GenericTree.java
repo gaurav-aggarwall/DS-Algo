@@ -74,6 +74,90 @@ public class GenericTree {
     return h;
   }
 
+  // Traversals
+  public static void traversals(Node node){
+    System.out.println("Node Pre " + node.data);
+    for (Node child : node.children) {
+        System.out.println("Edge Pre " + node.data + "--" + child.data);
+        traversals(child);
+        System.out.println("Edge Post " + node.data + "--" + child.data);
+    }
+    System.out.println("Node Post " + node.data);
+  }
+
+  // Level Order - Single Line
+  // Approach -> Add Root in queue, and till queue isn't empty , remove one and add its children and print
+  public static void levelOrder(Node node){
+    Queue<Node> q = new ArrayDeque<>();
+    q.add(node);
+    while(q.size() > 0) {
+      node = q.remove();
+      System.out.print(node.data + " "); 
+      for(Node child: node.children){
+        q.add(child);
+      }
+    }
+    System.out.println(".");
+  }
+
+  // Level Order - Line Wise
+  public static void levelOrderLinewise(Node node){
+    Queue<Node> q = new ArrayDeque<>();
+    q.add(node);
+
+    while(q.size() > 0) {
+      int s = q.size();
+      for (int i = 0; i < s; i++) {
+        node = q.remove();
+        System.out.print(node.data + " ");
+        for(Node child: node.children){
+          q.add(child);
+        }
+      }
+      System.out.println();
+    }
+  }
+
+  // Level Order Traversal - Zig Zag
+  // Approach :
+  // 1. Maintain two stacks, main and curr level
+  // 2. from main pop nodes and add their children in curr
+  // 3. When main is empty it means this level is over increment level and make curr as new main and 
+  //    curr as new stack
+  // 4. When adding children to curr add in either normal or reverse order on basis of level
+  //    If level is odd then normal and if even then reverse
+  public static void levelOrderLinewiseZZ(Node node) {
+    Stack<Node> main = new Stack<>();
+    main.push(node);
+    
+    Stack<Node> curr = new Stack<>();
+    int level = 1;
+    
+    while(main.size() > 0) {
+      node = main.pop();
+      System.out.print(node.data + " ");
+      
+      if (level % 2 == 1) {
+        for(int i = 0; i < node.children.size(); i++) {
+            Node childNode = node.children.get(i);
+            curr.push(childNode);
+        }  
+      } else {
+        for(int i = node.children.size() - 1; i >= 0; i--) {
+            Node childNode = node.children.get(i);
+            curr.push(childNode);
+        }  
+      }
+      
+      if(main.size() == 0) {
+        main = curr;
+        curr = new Stack<>();
+        level++;
+        System.out.println();
+      }
+    }
+  }
+
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
