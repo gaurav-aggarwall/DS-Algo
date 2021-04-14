@@ -212,6 +212,39 @@ public class GenericTree {
     
     return false;
   }
+
+  // Node to Root path
+  public static ArrayList<Integer> nodeToRootPath(Node node, int data){
+    if (node.data == data) {
+      ArrayList<Integer> ans = new ArrayList<Integer>();
+      ans.add(data);
+      return ans;
+    }
+    
+    for(Node child : node.children) {
+      ArrayList<Integer> ans = nodeToRootPath(child, data);
+      if (ans.size() > 0) {
+        ans.add(node.data);
+        return ans;
+      }
+    }
+    return new ArrayList<>();
+ }
+
+  // Lowest Common Ancestor (LCA)
+  public static int lca(Node node, int d1, int d2) {
+    ArrayList<Integer> p1 = nodeToRootPath(node, d1);
+    ArrayList<Integer> p2 = nodeToRootPath(node, d2);
+    
+    int a = p1.size() - 1;
+    int b = p2.size() - 1;
+    
+    while(a >= 0 && b >= 0 && p1.get(a) == p2.get(b)) {
+      a--;
+      b--;
+    }
+    return p1.get(++a);
+  }
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
