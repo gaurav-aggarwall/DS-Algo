@@ -158,6 +158,60 @@ public class GenericTree {
     }
   }
 
+  // Mirror
+  // Approach -> Mirror all children and reverse the children
+  public static void mirror(Node node){
+    for (Node child : node.children) {
+        mirror(child);
+    }
+    Collections.reverse(node.children);
+  }
+
+  // Remove Leaves
+  public static void removeLeaves(Node node) {
+    for(int i = node.children.size() - 1; i >= 0; i--) {
+      if (node.children.get(i).children.size() == 0) {
+        node.children.remove(i);
+      } else {
+        removeLeaves(node.children.get(i));
+      } 
+    }
+  }
+
+  // Linearize
+  // Lineariz the children
+  // Take last child and attach it at tail of second last child and remove last child
+  public static void linearize(Node node){
+    for (Node child : node.children) {
+      linearize(child);
+    }
+    
+    while (node.children.size() > 1) {
+      Node last = node.children.remove(node.children.size() - 1);
+      Node secondLast = node.children.get(node.children.size() - 1);
+      Node secondLastTail = getTail(secondLast);
+      secondLastTail.children.add(last);
+    }
+  }
+  
+  public static Node getTail(Node node) {
+    while(node.children.size() == 1) {
+      node = node.children.get(0);
+    }
+    return node;
+  }
+
+
+  // Find data in tree
+  public static boolean find(Node node, int data) {
+    if (node.data == data) return true;
+    
+    for (Node child : node.children) {
+      if (find(child, data)) return true;     
+    }
+    
+    return false;
+  }
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
