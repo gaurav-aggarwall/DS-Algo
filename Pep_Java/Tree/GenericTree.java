@@ -201,7 +201,6 @@ public class GenericTree {
     return node;
   }
 
-
   // Find data in tree
   public static boolean find(Node node, int data) {
     if (node.data == data) return true;
@@ -245,6 +244,60 @@ public class GenericTree {
     }
     return p1.get(++a);
   }
+
+  // Distance Between Two Nodes 
+  public static int distanceBetweenNodes(Node node, int d1, int d2){
+    ArrayList<Integer> p1 = nodeToRootPath(node, d1);
+    ArrayList<Integer> p2 = nodeToRootPath(node, d2);
+    
+    int i = p1.size() - 1;
+    int j = p2.size() - 1;
+
+    while(i >= 0 && j >= 0 && p1.get(i) == p2.get(j)){
+      i--;
+      j--;
+    }
+    
+    return i + j + 2;
+  }
+
+  // Are Trees similar in Shape
+  public static boolean areSimilar(Node n1, Node n2) {
+    if (n1 == null && n2 == null) return true;
+    
+    if (n1.children.size() != n2.children.size()) return false;
+    
+    for (int i = 0; i < n1.children.size(); i++) {
+        boolean childResult = areSimilar(n1.children.get(i), n2.children.get(i));
+        if (!childResult) return false;
+    }
+    
+    return true;
+  } 
+
+  // Mirror
+  public static boolean areMirror(Node n1, Node n2) {
+    if (n1 == null && n2 == null) return true;
+    
+    int n1Size = n1.children.size();
+    int n2Size = n2.children.size();
+    
+    if (n1Size != n2Size) return false;
+    
+    for (int i = 0; i < n1Size; i++) {
+        boolean childResult = areMirror(n1.children.get(i), n2.children.get(n2Size - i - 1));
+        if (!childResult) return false;
+    }
+    
+    return true;
+  }
+
+  // Symmetric
+  // Approach -> Only things which are mirror image of themselves are symmetric. Eg: Face
+  public static boolean IsSymmetric(Node node) {
+    return areMirror(node, node);
+  }
+
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
