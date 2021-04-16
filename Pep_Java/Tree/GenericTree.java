@@ -298,6 +298,49 @@ public class GenericTree {
     return areMirror(node, node);
   }
 
+  // Predecessor and Successor 
+  // Approach -> 
+
+  // State = 0 then if data matches then set state = 1 else this is the predecessor node
+  // State = 1 Set successor as this will only be when we are on node just after 
+  // we have already found the node as after this we set state = 2
+  static Node predecessor;
+  static Node successor;
+  static int state;
+  public static void predecessorAndSuccessor(Node node, int data) {
+    if (state == 0) {
+        if (node.data == data) {
+            state = 1;
+        } else {
+            predecessor = node;
+        }
+    } else if (state == 1) {
+        state = 2;
+        successor = node;
+    } 
+
+    for (Node child : node.children) {
+        predecessorAndSuccessor(child, data);
+    }
+  }
+
+  // Ceil and Floor
+  static int ceil;
+  static int floor;
+  public static void ceilAndFloor(Node node, int data) {
+    if (node.data < data && node.data > floor) {
+        floor = node.data;
+    }
+    
+    if (node.data > data && node.data < ceil) {
+        ceil = node.data;
+    }
+    
+    for (Node child : node.children) {
+        ceilAndFloor(child, data);
+    }
+  }
+
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
