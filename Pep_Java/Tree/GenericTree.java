@@ -300,7 +300,6 @@ public class GenericTree {
 
   // Predecessor and Successor 
   // Approach -> 
-
   // State = 0 then if data matches then set state = 1 else this is the predecessor node
   // State = 1 Set successor as this will only be when we are on node just after 
   // we have already found the node as after this we set state = 2
@@ -339,6 +338,72 @@ public class GenericTree {
     for (Node child : node.children) {
         ceilAndFloor(child, data);
     }
+  }
+
+  // Kth Largest
+  // Approach -> find floor k times starting with +Inf and now find floor with prev floor
+  // on 1st iter -> floor will be max value  [ max = floor(+inf) ]
+  // on 2nd iter -> floor will be second max  [ secondMax = floor(max) ]
+  public static int kthLargest(Node node, int k){
+    floor = Integer.MIN_VALUE;
+    int ans = Integer.MAX_VALUE;
+    
+    for (int i = 0; i < k; i++) {
+      ceilAndFloor(node, ans);
+      ans = floor;
+      floor = Integer.MIN_VALUE;
+    }
+    
+    return ans;
+  }
+
+  // Max Subtree Sum
+  static int maxSum;
+  static Node maxNode;
+  public static int maxSubtreeSum(Node node) {
+    if (node == null) return 0;
+    
+    int childSum = 0;
+    
+    for(Node child : node.children) {
+      childSum += maxSubtreeSum(child);
+    }
+    
+    int sum = node.data + childSum;
+
+    if (sum > maxSum) {
+      maxSum = sum;
+      maxNode = node;
+    }
+    
+    return sum;
+  }
+
+  // Diameter
+  // Approach -> This fun calculates dia but returns height
+  // We need height because dia can be represented as
+  // dia = deepest child height + second deepest child height + 2 
+  // (2 because 2 edges to connect from one child to another through parent)
+  static int dia = 0;
+  public static int diameter(Node node) {
+    int maxHt = -1;
+    int secondMaxHt = -1;
+    
+    for (Node child : node.children) {
+      int height = diameter(child);
+      if (height > maxHt) {
+        secondMaxHt = maxHt;
+        maxHt = height;
+      } else if (height > secondMaxHt) {
+        secondMaxHt = height;
+      }
+    }
+    
+    if (maxHt + secondMaxHt + 2 > dia) {
+      dia = maxHt + secondMaxHt + 2;
+    } 
+    maxHt += 1;
+    return maxHt;
   }
 
   public static void main(String[] args) throws Exception {
