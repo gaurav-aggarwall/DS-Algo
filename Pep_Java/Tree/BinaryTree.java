@@ -183,6 +183,65 @@ public class BinaryTree {
     return null;
   }
 
+  // Print K Levels Down
+  public static void printKLevelsDown(Node node, int k){
+    if (node == null) return;
+    
+    if (k == 0) {
+        System.out.println(node.data);
+        return;
+    }
+    
+    printKLevelsDown(node.left, k - 1);
+    printKLevelsDown(node.right, k - 1);
+  }
+
+  // Print K Levels Down With Blocker
+  public static void printKLevelsDown(Node node, int k, Node blocker){
+    if (node == null || node == blocker) return;
+    
+    if (k == 0) {
+        System.out.println(node.data);
+        return;
+    }
+    
+    printKLevelsDown(node.left, k - 1, blocker);
+    printKLevelsDown(node.right, k - 1, blocker);
+  }
+
+  // IMP: Prink K nodes away
+  // Approach: Find Node To Root Path. Loop over all the nodes in node to root path
+  // Now we have to find k leels down from each of them but with different k levels for each
+  // For i = 0, levels will be k, because its same ques node
+  // For i = 1, levels will be k - 1 as it is already 1 level away from ques node. Therefore k - i is general
+  // Trick: We have to use blocker to not print in the blocker direction. As we are coming up from right then print 
+  // k - i level in left only. So For each iter, Blocker node is just prev node in node to root path  
+  public static void printKNodesFar(Node node, int data, int k) {
+    if (node == null) return;
+    
+    ArrayList<Node> path = nodeToRootPath(node, data);
+    
+    for(int i = 0; i < path.size() && i <= k; i++) {
+        Node blocker = null;
+        if (i > 0) blocker = path.get(i - 1);
+        printKLevelsDownWithBlocker(path.get(i), k - i, blocker);
+    }
+  }
+
+  // Path to Leaf Node with Range
+  public static void pathToLeafFromRoot(Node node, String path, int sum, int lo, int hi){
+    if (node == null) return;
+    
+    if (node.left == null && node.right == null) {
+        sum += node.data;
+        if (sum >= lo && sum <= hi) System.out.println(path + node.data + " ");
+        return;
+    }
+    
+    pathToLeafFromRoot(node.left, path + node.data + " ", sum + node.data, lo, hi);
+    pathToLeafFromRoot(node.right, path + node.data + " ", sum + node.data, lo, hi);
+  }
+
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
