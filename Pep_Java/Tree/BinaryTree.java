@@ -242,6 +242,168 @@ public class BinaryTree {
     pathToLeafFromRoot(node.right, path + node.data + " ", sum + node.data, lo, hi);
   }
 
+  // Left Cloned Tree
+  public static Node createLeftCloneTree(Node node){
+    if (node == null) return null;
+    
+    Node leftTree = createLeftCloneTree(node.left);
+    Node rightTree = createLeftCloneTree(node.right);
+    
+    node.right = rightTree;
+    node.left = new Node(node.data, null, null);
+    node.left.left = leftTree;
+    
+    return node;
+  }
+
+  // Transform back from left cloned tree
+  public static Node transBackFromLeftClonedTree(Node node){
+    if (node == null) return null;
+    
+    node.left = transBackFromLeftClonedTree(node.left.left);
+    node.right = transBackFromLeftClonedTree(node.right);
+    
+    return node;
+  }
+  
+  // Print Single Child Nodes
+  public static void printSingleChildNodes(Node node, Node parent){
+    if (node == null) return;
+    
+    if (parent != null && (parent.left == null || parent.right == null)) {
+        System.out.println(node.data);
+    }
+    
+    printSingleChildNodes(node.left, node);
+    printSingleChildNodes(node.right, node);
+  }
+
+  // Remove Leaf Nodes
+  public static Node removeLeaves(Node node){
+    if (node == null || (node.left == null && node.right == null)) return null;
+    
+    node.left = removeLeaves(node.left);
+    node.right = removeLeaves(node.right);
+    
+    return node;
+  }
+
+  // Diameter
+  // From every node return DiaPair
+  // Height in terms of edges is max of left-height and right-height + 1
+  // Dia can be either in left only, right only or via root
+  // Therfore it is max of left dia and right dia, which is then compared with leftHeight + rightHEight + 2 
+  static class DiaPair {
+    int height;
+    int dia;
+  }
+  
+  public static DiaPair diameter1(Node node) {
+    if (node == null) {
+        DiaPair dp = new DiaPair();
+        dp.height = -1;
+        dp.dia = 0;
+        return dp;
+    }  
+      
+    DiaPair left = diameter1(node.left);
+    DiaPair right = diameter1(node.right);
+    
+    DiaPair dp = new DiaPair();
+    dp.height = Math.max(left.height, right.height) + 1;
+    dp.dia = Math.max(left.height + right.height + 2, Math.max(left.dia, right.dia));
+    
+    return dp;
+  }
+  
+  // Tilt
+  static int tilt = 0;
+  public static int tilt(Node node){
+    if (node == null) return 0;
+    
+    int leftSum = tilt(node.left);
+    int rightSum = tilt(node.right);
+    
+    tilt += Math.abs(leftSum - rightSum);
+    return node.data + leftSum + rightSum;
+  } 
+
+  // Is Tree A BST
+  // Approach -> For a tree to be BST, left and right tree to be BST
+  // And node value should be greater than max value in left tree and less than min value in right tree
+  public static class BSTPair {
+    boolean isBST = true;
+    int min = Integer.MAX_VALUE;
+    int max = Integer.MIN_VALUE;
+  }
+  
+  public static BSTPair isTreeBST(Node node) {
+    if (node == null) return new BSTPair();  
+    
+    BSTPair lp = isTreeBST(node.left);
+    BSTPair rp = isTreeBST(node.right);
+    
+    BSTPair pair = new BSTPair();
+    pair.min = Math.min(node.data, Math.min(lp.min, rp.min));
+    pair.max = Math.max(node.data, Math.max(lp.max, rp.max));
+    if (lp.isBST == false || rp.isBST == false) {
+      pair.isBST = false;
+    } else {
+      pair.isBST = node.data >= lp.max && node.data <= rp.min;
+    }
+    return pair;
+  }
+
+  // Is Tree Balanced
+  static boolean isBalanced = true;
+  public static int isTreeBalanced(Node node) {
+    if (node == null || isBalanced == false) return 0;
+    
+    int leftHeight = isTreeBalanced(node.left);
+    int rightHeight = isTreeBalanced(node.right);
+    
+    if (Math.abs(leftHeight - rightHeight) > 1) isBalanced = false;
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  // Largest BST in tree
+  public static class BstPair {
+    boolean isBST = true;
+    int min = Integer.MAX_VALUE;
+    int max = Integer.MIN_VALUE;
+    Node maxBST = null;
+    int size = 0;
+  }
+  
+  public static BstPair largestBST(Node node) {
+    if (node == null) return new BstPair();  
+    
+    BstPair lp = largestBST(node.left);
+    BstPair rp = largestBST(node.right);
+    
+    BSTPair pair = new BstPair();
+    pair.min = Math.min(node.data, Math.min(lp.min, rp.min));
+    pair.max = Math.max(node.data, Math.max(lp.max, rp.max));
+    if (lp.isBST == false || rp.isBST == false) {
+      pair.isBST = false;
+    } else {
+      pair.isBST = node.data >= lp.max && node.data <= rp.min;
+    }
+    
+    if (pair.isBST) {
+        pair.size = lp.size + rp.size + 1;
+        pair. maxBST = node;
+    } else if (lp.size > rp.size) {
+        pair.size = lp.size;
+        pair.maxBST = lp.maxBST;
+    } else {
+        pair.size = rp.size;
+        pair.maxBST = rp.maxBST;
+    }
+    
+    return pair;
+  }
+
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
