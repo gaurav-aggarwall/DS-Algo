@@ -166,7 +166,7 @@ public class LinkedListClass {
     public void reverseDI() {
       int li = 0;
       int ri = size - 1;
-      while(li < ri){
+      while (li < ri) {
         Node left = getNodeAt(li);
         Node right = getNodeAt(ri);
 
@@ -178,17 +178,17 @@ public class LinkedListClass {
         ri--;
       }
     }
- 
-    public void reversePI(){
-      if(size <= 1){
+
+    public void reversePI() {
+      if (size <= 1) {
         return;
       }
 
       Node prev = null;
       Node curr = head;
-      while(curr != null){
+      while (curr != null) {
         Node next = curr.next;
-        
+
         curr.next = prev;
         prev = curr;
         curr = next;
@@ -198,31 +198,33 @@ public class LinkedListClass {
       head = tail;
       tail = temp;
     }
-  
-		// K From Last
-		// Move fast node k from starting (offset) and then use traverse till the end, where slow ptr a the end is the ans
-    public int kthFromLast(int k){
+
+    // K From Last
+    // Move fast node k from starting (offset) and then use traverse till the end,
+    // where slow ptr a the end is the ans
+    public int kthFromLast(int k) {
       Node slow = head;
       Node fast = head;
-      for(int i = 0; i < k; i++){
+      for (int i = 0; i < k; i++) {
         fast = fast.next;
       }
 
-      while(fast != tail){
+      while (fast != tail) {
         slow = slow.next;
         fast = fast.next;
       }
 
       return slow.data;
     }
-		
-		// Mid of linked list
-		// 2 Ptr approach, slow is moved one node while fast is moved 2 nodes at a time. Slow is ans when fast reaches end
-    public int mid(){
+
+    // Mid of linked list
+    // 2 Ptr approach, slow is moved one node while fast is moved 2 nodes at a time.
+    // Slow is ans when fast reaches end
+    public int mid() {
       Node slow = head;
       Node fast = head;
-      
-      while(fast.next != null && fast.next.next != null){
+
+      while (fast.next != null && fast.next.next != null) {
         slow = slow.next;
         fast = fast.next.next;
       }
@@ -230,37 +232,37 @@ public class LinkedListClass {
       return slow.data;
     }
 
-		// Merge Sort 2 LL
-		public static LinkedList mergeTwoSortedLists(LinkedList l1, LinkedList l2) {
-			LinkedList list = new LinkedList();
-			
-			Node p1 = l1.head;
-			Node p2 = l2.head;
-			
-			while(p1 != null && p2 != null) {
-				if (p1.data < p2.data) {
-					list.addLast(p1.data);
-					p1 = p1.next;
-				} else {
-					list.addLast(p2.data);
-					p2 = p2.next;
-				}
-			}
-			
-			while(p1 != null) {
-				list.addLast(p1.data);
-				p1 = p1.next;
-			}
-			
-			while(p2 != null) {
-				list.addLast(p2.data);
-				p2 = p2.next;
-			}
-			
-			return list;
-		}
+    // Merge Sort 2 LL
+    public static LinkedList mergeTwoSortedLists(LinkedList l1, LinkedList l2) {
+      LinkedList list = new LinkedList();
 
-    // Merge Sort 
+      Node p1 = l1.head;
+      Node p2 = l2.head;
+
+      while (p1 != null && p2 != null) {
+        if (p1.data < p2.data) {
+          list.addLast(p1.data);
+          p1 = p1.next;
+        } else {
+          list.addLast(p2.data);
+          p2 = p2.next;
+        }
+      }
+
+      while (p1 != null) {
+        list.addLast(p1.data);
+        p1 = p1.next;
+      }
+
+      while (p2 != null) {
+        list.addLast(p2.data);
+        p2 = p2.next;
+      }
+
+      return list;
+    }
+
+    // Merge Sort
     public static Node midNode(Node head, Node tail) {
       Node f = head;
       Node s = head;
@@ -273,20 +275,100 @@ public class LinkedListClass {
       return s;
     }
 
-    public static LinkedList mergeSort(Node head, Node tail){
+    public static LinkedList mergeSort(Node head, Node tail) {
       if (head == tail) {
         LinkedList list = new LinkedList();
         list.addLast(head.data);
         return list;
       }
-      
+
       Node mid = midNode(head, tail);
       LinkedList left = mergeSort(head, mid);
       LinkedList right = mergeSort(mid.next, tail);
-      
+
       return mergeTwoSortedLists(left, right);
     }
 
+    // Removing Duplicates
+    public void removeDuplicates() {
+      if (this.size() < 2)
+        return;
+
+      Node prev = head;
+      Node curr = prev.next;
+
+      while (curr != null) {
+        while (curr != null && curr.data == prev.data) {
+          curr = curr.next;
+        }
+
+        prev.next = curr;
+        prev = prev.next;
+        if (curr != null)
+          curr = curr.next;
+      }
+    }
+
+    // Odd Even List
+    public void oddEven() {
+      LinkedList odd = new LinkedList();
+      LinkedList even = new LinkedList();
+
+      while (head != null) {
+        if (head.data % 2 == 0) {
+          even.addLast(head.data);
+        } else {
+          odd.addLast(head.data);
+        }
+        removeFirst();
+      }
+
+      if (odd.size() > 0) {
+        this.head = odd.head;
+        this.tail = odd.tail;
+        this.size = odd.size;
+
+        if (even.size() > 0) {
+          odd.tail.next = even.head;
+          this.tail = even.tail;
+          this.size = odd.size + even.size;
+        }
+      } else {
+        this.head = even.head;
+        this.tail = even.tail;
+        this.size = even.size;
+      }
+    }
+
+    // K Reverse
+    public void kReverse(int k) {
+      LinkedList list = new LinkedList();
+
+      while (this.size() > 0) {
+        if (this.size() >= k) {
+          LinkedList tempList = new LinkedList();
+
+          for (int i = 0; i < k; i++) {
+            tempList.addFirst(this.getFirst());
+            this.removeFirst();
+          }
+
+          if (list.size() == 0) {
+            list = tempList;
+          } else {
+            list.tail.next = tempList.head;
+            list.tail = tempList.tail;
+          }
+        } else {
+          list.addLast(head.data);
+          removeFirst();
+        }
+      }
+
+      this.head = list.head;
+      this.tail = list.tail;
+      this.size = list.size;
+    }
   }
 
   public static void main(String[] args) throws Exception {
@@ -332,11 +414,11 @@ public class LinkedListClass {
       } else if (str.startsWith("removeAt")) {
         int idx = Integer.parseInt(str.split(" ")[1]);
         list.removeAt(idx);
-      } else if(str.startsWith("reverseDI")){
+      } else if (str.startsWith("reverseDI")) {
         list.reverseDI();
-      } else if(str.startsWith("reversePI")){
+      } else if (str.startsWith("reversePI")) {
         list.reversePI();
-      } else if(str.startsWith("kthFromEnd")){
+      } else if (str.startsWith("kthFromEnd")) {
         int idx = Integer.parseInt(str.split(" ")[1]);
         System.out.println(list.kthFromLast(idx));
       }
