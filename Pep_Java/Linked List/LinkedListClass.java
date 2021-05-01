@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.*;
 
 public class LinkedListClass {
   public static class Node {
@@ -368,6 +367,130 @@ public class LinkedListClass {
       this.head = list.head;
       this.tail = list.tail;
       this.size = list.size;
+    }
+
+    // Palindrome
+    Node left;
+
+    public boolean IsPalindrome() {
+      left = head;
+      return isPalindromeHelper(left);
+    }
+
+    public boolean isPalindromeHelper(Node node) {
+      if (node == null)
+        return true;
+
+      boolean result = isPalindromeHelper(node.next);
+
+      if (result == false)
+        return false;
+      else if (left.data != node.data)
+        return false;
+      else {
+        left = left.next;
+        return true;
+      }
+    }
+
+    // Fold
+    public void fold() {
+      left = head;
+      foldHelper(left, 0);
+    }
+
+    public void foldHelper(Node node, int floor) {
+      if (node == null)
+        return;
+
+      foldHelper(node.next, floor + 1);
+
+      if (floor > size / 2) {
+        Node temp = left.next;
+        node.next = left.next;
+        left.next = node;
+        left = temp;
+      } else if (floor == size / 2) {
+        tail = node;
+        node.next = null;
+      }
+    }
+
+    // Addition of LL
+    static LinkedList ans;
+    public static LinkedList addTwoLists(LinkedList one, LinkedList two) {
+      ans = new LinkedList();
+
+      int carry = addListHelper(one.head, one.size(), two.head, two.size());
+
+      if (carry != 0) {
+        ans.addFirst(carry);
+      }
+
+      return ans;
+    }
+
+    public static int addListHelper(Node one, int pv1, Node two, int pv2) {
+      if (one == null && two == null) {
+        return 0;
+      }
+
+      if (pv1 > pv2) {
+        int carry = addListHelper(one.next, pv1 - 1, two, pv2);
+
+        int sum = one.data + carry;
+        int nd = sum % 10;
+        int nc = sum / 10;
+
+        ans.addFirst(nd);
+        return nc;
+      } else if (pv1 < pv2) {
+        int carry = addListHelper(one, pv1, two.next, pv2 - 1);
+
+        int sum = two.data + carry;
+        int nd = sum % 10;
+        int nc = sum / 10;
+
+        ans.addFirst(nd);
+        return nc;
+      } else {
+        int carry = addListHelper(one.next, pv1 - 1, two.next, pv2 - 1);
+
+        int sum = one.data + two.data + carry;
+        int nd = sum % 10;
+        int nc = sum / 10;
+
+        ans.addFirst(nd);
+        return nc;
+      }
+    }
+
+    // Intersection Node
+    public static int findIntersection(LinkedList one, LinkedList two) {
+      int s1 = one.size();
+      int s2 = two.size();
+
+      if (s1 > s2)
+        return findIntersectionHelper(one, two);
+      else
+        return findIntersectionHelper(two, one);
+    }
+
+    public static int findIntersectionHelper(LinkedList large, LinkedList small) {
+      int diff = large.size() - small.size();
+
+      Node one = large.head;
+      Node two = small.head;
+      for (int i = 0; i < diff; i++) {
+        one = one.next;
+      }
+
+      while (one != null && two != null && one.data != two.data) {
+        one = one.next;
+        two = two.next;
+      }
+
+      return one.data;
     }
   }
 
