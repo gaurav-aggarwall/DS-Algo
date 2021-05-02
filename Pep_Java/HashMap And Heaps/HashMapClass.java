@@ -70,7 +70,7 @@ public class HashMapClass {
 	// Create Boolean Hashmap for array
 	// Now traverse and find ma consecutive count and maintain start for it
 	// Note: Elements were given to be in range of 0 to 15 inclusive
-	public static void lqs(int[] arr1, int[] arr2) {
+	public static void lqs(int[] arr, int n) {
 		HashMap<Integer, Boolean> map = new HashMap<Integer, Boolean>();
 
 		for (int i = 0; i <= 15; i++) {
