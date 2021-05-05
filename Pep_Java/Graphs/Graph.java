@@ -48,6 +48,20 @@ public class Graph {
   }
 
   // Multisolver
+  static class Pair implements Comparable<Pair> {
+    int wsf;
+    String psf;
+
+    Pair(int wsf, String psf) {
+      this.wsf = wsf;
+      this.psf = psf;
+    }
+
+    public int compareTo(Pair o) {
+      return this.wsf - o.wsf;
+    }
+  }
+
   static String spath;
   static Integer spathwt = Integer.MAX_VALUE;
   static String lpath;
@@ -101,6 +115,72 @@ public class Graph {
       }
     }
     visited[src] = false;
+  }
+
+  // Get Connected Componets
+  // Loop over all vertices and call drawTree and add the component to componets
+  // In Draw Tree -> travel all nbr vertex of current src vertex and add them in a
+  // component
+  public static ArrayList<ArrayList<Integer>> getConnectedPaths(ArrayList<Edge>[] graph, boolean[] visited) {
+    ArrayList<ArrayList<Integer>> components = new ArrayList<ArrayList<Integer>>();
+
+    for (int vtc = 0; vtc < graph.length; vtc++) {
+      if (visited[vtc] == false) {
+        visited[vtc] = true;
+        ArrayList<Integer> component = new ArrayList<Integer>();
+        drawTree(graph, vtc, visited, component);
+        components.add(component);
+      }
+    }
+
+    return components;
+  }
+
+  public static void drawTree(ArrayList<Edge>[] graph, int src, boolean[] visited, ArrayList<Integer> comp) {
+    visited[src] = true;
+    comp.add(src);
+
+    for (Edge edge : graph[src]) {
+      if (visited[edge.nbr] == false) {
+        drawTree(graph, edge.nbr, visited, comp);
+      }
+    }
+  }
+
+  // No of Islands
+  // 0 - Land, 1 - Watet
+  public static int getNumberOfIslands(int[][] arr, boolean[][] visited) {
+    int islands = 0;
+
+    for (int i = 0; i < arr.length; i++) {
+      for (int j = 0; j < arr[0].length; j++) {
+        if (arr[i][j] == 0 && visited[i][j] == false) {
+          visitIsland(arr, i, j, visited);
+          islands++;
+        }
+      }
+    }
+
+    for (int i = 0; i < arr.length; i++) {
+      for (int j = 0; j < arr[0].length; j++) {
+        System.out.print(visited[i][j] + " ");
+      }
+      System.out.println();
+    }
+
+    return islands;
+  }
+
+  public static void visitIsland(int[][] arr, int i, int j, boolean[][] visited) {
+    if (i < 0 || i >= arr.length || j < 0 || j >= arr[0].length || arr[i][j] == 1 || visited[i][j] == true)
+      return;
+
+    visited[i][j] = true;
+
+    visitIsland(arr, i - 1, j, visited);
+    visitIsland(arr, i, j + 1, visited);
+    visitIsland(arr, i + 1, j, visited);
+    visitIsland(arr, i, j - 1, visited);
   }
 
   public static void main(String[] args) throws Exception {
