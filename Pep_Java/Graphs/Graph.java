@@ -280,10 +280,106 @@ public class Graph {
     return false;
   }
 
+  // Is BiPartite
+  // Visited is int array with -1 as prefilled value to mark it unvisited
+  // Test for each component as every component must be bipartite
+  // When BFS traversing if the vertex is visited already and its level is same as
+  // in visited array then its ok
+  // otherwise it is not bipartite as it has odd number of vertex
+  public static void isBipartite(ArrayList<Edge>[] graph, int[] visited) {
+    for (int v = 0; v < graph.length; v++) {
+      if (visited[v] == -1) {
+        boolean isCompBipartite = isBipartiteHelper(graph, v, visited);
+        if (isCompBipartite == false) {
+          System.out.println(false);
+          return;
+        }
+      }
+    }
+    System.out.println(true);
+  }
+
+  public static class BPTPair {
+    int v;
+    int level;
+
+    BPTPair(int v, int level) {
+      this.v = v;
+      this.level = level;
+    }
+  }
+
+  public static boolean isBipartiteHelper(ArrayList<Edge>[] graph, int src, int[] visited) {
+    ArrayDeque<BPTPair> q = new ArrayDeque<BPTPair>();
+    q.add(new BPTPair(src, 0));
+
+    while (q.size() > 0) {
+      BPTPair pair = q.remove();
+
+      if (visited[pair.v] != -1) {
+        if (pair.level != visited[pair.v]) {
+          return false;
+        }
+      } else {
+        visited[pair.v] = pair.level;
+      }
+
+      for (Edge edge : graph[pair.v]) {
+        if (visited[edge.nbr] == -1) {
+          q.add(new BPTPair(edge.nbr, pair.level + 1));
+        }
+      }
+    }
+
+    return true;
+  }
+
+  // Spread of Infection
+  public static class IPair {
+    int v;
+    int t;
+
+    IPair(int v, int t) {
+      this.v = v;
+      this.t = t;
+    }
+  }
+
+  public static int infection(ArrayList<Edge>[] graph, int src, int t, boolean[] visited) {
+    int count = 0;
+
+    ArrayDeque<IPair> q = new ArrayDeque<IPair>();
+    q.add(new IPair(src, 1));
+
+    while (q.size() > 0) {
+      IPair pair = q.remove();
+
+      if (visited[pair.v] == true)
+        continue;
+
+      if (pair.t <= t) {
+        count++;
+      } else {
+        break;
+      }
+
+      visited[pair.v] = true;
+
+      for (Edge edge : graph[pair.v]) {
+        if (visited[edge.nbr] == false) {
+          q.add(new IPair(edge.nbr, pair.t + 1));
+        }
+      }
+    }
+
+    return count;
+  }
+
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     int vtces = Integer.parseInt(br.readLine());
+    @SuppressWarnings("unchecked")
     ArrayList<Edge>[] graph = new ArrayList[vtces];
     for (int i = 0; i < vtces; i++) {
       graph[i] = new ArrayList<>();
