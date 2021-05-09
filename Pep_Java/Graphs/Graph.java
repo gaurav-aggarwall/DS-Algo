@@ -375,6 +375,105 @@ public class Graph {
     return count;
   }
 
+  // Shortest Path - Dijkstra
+  // Same as BFS but use Priority Queue as we select at every stage the vertex
+  // which is closest to current vertex
+  static class SPPair {
+    int v;
+    String psf;
+    int wsf;
+
+    SPPair(int v, String psf, int wsf) {
+      this.v = v;
+      this.psf = psf;
+      this.wsf = wsf;
+    }
+  }
+
+  public static void shortestPath(ArrayList<Edge>[] graph, int src, boolean[] visited) {
+    PriorityQueue<SPPair> q = new PriorityQueue<SPPair>((a, b) -> a.wsf - b.wsf);
+    q.add(new SPPair(src, src + "", 0));
+
+    while (q.size() > 0) {
+      SPPair pair = q.remove();
+
+      if (visited[pair.v] == true)
+        continue;
+      else
+        visited[pair.v] = true;
+
+      System.out.println(pair.v + " via " + pair.psf + " @ " + pair.wsf);
+
+      for (Edge edge : graph[pair.v]) {
+        if (visited[edge.nbr] == false) {
+          q.add(new SPPair(edge.nbr, pair.psf + edge.nbr, pair.wsf + edge.wt));
+        }
+      }
+    }
+  }
+
+  // Min Spanning Tree - Prim's Algo
+  // Same as Dijksrta, but at each stage instead of psf edge's wt is considered
+  static class PrimPair {
+    int v;
+    int av;
+    int wt;
+
+    PrimPair(int v, int av, int wt) {
+      this.v = v;
+      this.av = av;
+      this.wt = wt;
+    }
+  }
+
+  public static void spanningTree(ArrayList<Edge>[] graph, int src, boolean[] visited) {
+    PriorityQueue<PrimPair> q = new PriorityQueue<PrimPair>((a, b) -> a.wt - b.wt);
+    q.add(new PrimPair(src, -1, 0));
+
+    while (q.size() > 0) {
+      PrimPair pair = q.remove();
+
+      if (visited[pair.v] == true)
+        continue;
+      else
+        visited[pair.v] = true;
+
+      if (pair.av != -1)
+        System.out.println("[" + pair.v + "-" + pair.av + "@" + pair.wt + "]");
+
+      for (Edge edge : graph[pair.v]) {
+        if (visited[edge.nbr] == false) {
+          q.add(new PrimPair(edge.nbr, pair.v, edge.wt));
+        }
+      }
+    }
+  }
+
+  // Order of Compilation - Reverse Topological Order
+  public static void topologicalSort(ArrayList<Edge>[] graph, boolean[] visited) {
+    Stack<Integer> st = new Stack<Integer>();
+
+    for (int v = 0; v < graph.length; v++) {
+      if (visited[v] == false) {
+        traversal(graph, v, st, visited);
+      }
+    }
+
+    while (st.size() > 0) {
+      System.out.println(st.pop());
+    }
+  }
+
+  public static void traversal(ArrayList<Edge>[] graph, int src, Stack<Integer> st, boolean[] visited) {
+    visited[src] = true;
+    for (Edge edge : graph[src]) {
+      if (visited[edge.nbr] == false) {
+        traversal(graph, edge.nbr, st, visited);
+      }
+    }
+    st.push(src);
+  }
+
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
