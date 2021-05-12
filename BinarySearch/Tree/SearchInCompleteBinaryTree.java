@@ -3,7 +3,7 @@ import java.util.*;
 /**
  * public class Tree { int val; Tree left; Tree right; }
  */
-class Search_in_complete_binary_search {
+class SearchInCompleteBinaryTree {
   public boolean solve(Tree root, int target) {
     if (root == null)
       return false;
@@ -26,6 +26,7 @@ class Search_in_complete_binary_search {
     while (target > right) {
       target /= 2;
     }
+
     return target == right;
   }
 

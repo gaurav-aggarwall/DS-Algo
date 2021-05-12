@@ -13,7 +13,7 @@ import java.util.*;
  *   Tree right;
  * }
  */
-class Solution {
+class VerticalLines {
     int left = 0;
     int right = 0;
 
