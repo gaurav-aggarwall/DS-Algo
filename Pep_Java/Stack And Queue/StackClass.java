@@ -100,6 +100,30 @@ public class StackClass {
     return ans;
   }
 
+  // Stock Span
+  public static int[] stockSpan(int[] arr) {
+    int[] span = new int[arr.length];
+    Stack<Integer> st = new Stack<Integer>();
+
+    span[0] = 1;
+    st.push(0);
+
+    for (int i = 1; i < arr.length; i++) {
+      while (st.size() > 0 && arr[i] > arr[st.peek()]) {
+        st.pop();
+      }
+
+      if (st.size() == 0) {
+        span[i] = i + 1;
+      } else {
+        span[i] = i - st.peek();
+      }
+
+      st.push(i);
+    }
+
+    return span;
+  }
 
   public static void display(int[] a) {
     StringBuilder sb = new StringBuilder();
