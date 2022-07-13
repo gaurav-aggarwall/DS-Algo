@@ -1,6 +1,11 @@
 class BuySellStockUnlimited {
-  // Either pick the current ith house and calls for i - 2 house 
-  // or calls for i - 1 house
+  // On Any day, you can buy only if you havent bought previously.
+  // If you can buy on ith, you have two choices
+  //  - Buy: can not buy on i + 1 ... n th days and your profit is reduced buy buying price
+  //  - Dont Buy: can buy on i + 1 ... n th days  
+  // If you can sell on ith, you have two choices
+  //  - Sell: can not sell on i + 1 ... n th days and your profit is increased buy selling price
+  //  - Dont Sell: can sell on i + 1 ... n th days  
 
   // Recusrsion - TLE
   public int recusrive(int[] prices) {
